@@ -1,7 +1,5 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export type InquiryData = {
   fullName: string
   company?: string
@@ -66,6 +64,7 @@ export function buildInquiryEmailHtml(data: InquiryData): string {
 }
 
 export async function sendInquiryNotificationEmail(data: InquiryData): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   await resend.emails.send({
     from: 'Myra Global Website <noreply@myraglobalexports.com>',
     to: [process.env.INQUIRY_NOTIFICATION_EMAIL ?? 'info@myraglobalexports.com'],
