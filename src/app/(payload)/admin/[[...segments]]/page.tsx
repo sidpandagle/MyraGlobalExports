@@ -1,1 +1,1 @@
-export { RootPage as default, generateMetadata } from '@payloadcms/next/views'
+export { RootPage as default, generatePageMetadata as generateMetadata } from '@payloadcms/next/views'
