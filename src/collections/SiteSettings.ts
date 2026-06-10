@@ -33,7 +33,6 @@ export const SiteSettings: GlobalConfig = {
         { name: 'address', type: 'textarea' },
         { name: 'businessHours', type: 'textarea', defaultValue: 'Monday–Saturday: 9:00 AM – 6:00 PM IST' },
         { name: 'googleMapsEmbedUrl', type: 'text' },
-        { name: 'showContactInfo', type: 'checkbox', defaultValue: true },
       ],
     },
     {

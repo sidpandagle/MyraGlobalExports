@@ -7,7 +7,12 @@ export const Inquiries: CollectionConfig = {
     defaultColumns: ['fullName', 'company', 'country', 'productRequired', 'createdAt'],
   },
   disableDuplicate: true,
-  access: { create: () => true },
+  access: {
+    create: () => true,
+    read: ({ req }) => Boolean(req.user),
+    update: ({ req }) => Boolean(req.user),
+    delete: ({ req }) => Boolean(req.user),
+  },
   fields: [
     { name: 'fullName', type: 'text', required: true },
     { name: 'company', type: 'text' },
