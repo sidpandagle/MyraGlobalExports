@@ -31,9 +31,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
         social={settings?.social}
         sections={settings?.sections}
       />
-      {settings?.contact?.whatsapp && (
-        <WhatsAppButton phone={settings.contact.whatsapp} />
-      )}
+      <WhatsAppButton phone={settings?.contact?.whatsapp ?? '+919999999999'} />
     </div>
   )
 }

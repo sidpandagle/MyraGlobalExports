@@ -89,8 +89,14 @@ export default async function NewsArticlePage({
         </div>
       )}
       {article.excerpt && (
-        <p className="text-lg leading-relaxed text-gray-600">{article.excerpt}</p>
+        <div className="mt-6">
+          <p className="text-lg leading-relaxed text-gray-700">{article.excerpt}</p>
+        </div>
       )}
+
+      <div className="mt-8 rounded-xl bg-gray-50 p-6 text-center text-sm text-gray-400">
+        Full article content available via the admin panel.
+      </div>
     </div>
   )
 }

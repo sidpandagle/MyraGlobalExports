@@ -17,7 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans">
         {children}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID &&
+          process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID !== 'undefined' && (
           <>
             <Script
               strategy="afterInteractive"
@@ -28,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+                var gaId = '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}';
+                if (gaId && gaId !== 'undefined') { gtag('config', gaId); }
               `}
             </Script>
           </>

@@ -53,9 +53,9 @@ export default async function CertificationsPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { name: 'GST Registration', desc: 'Goods & Services Tax registered', icon: '📋' },
-            { name: 'IEC Certificate', desc: 'Import Export Code (when available)', icon: '🌐' },
-            { name: 'APEDA Registration', desc: 'Agricultural & Processed Food (when available)', icon: '🌾' },
-            { name: 'FSSAI Certificate', desc: 'Food Safety Standards (when available)', icon: '🍱' },
+            { name: 'IEC Certificate', desc: 'Import Export Code — certification in progress', icon: '🌐' },
+            { name: 'APEDA Registration', desc: 'Agricultural & Processed Food Exports certification', icon: '🌾' },
+            { name: 'FSSAI Certificate', desc: 'Food Safety Standards Authority certification', icon: '🍱' },
           ].map(({ name, desc, icon }) => (
             <div key={name} className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm">
               <span className="text-2xl" aria-hidden="true">{icon}</span>

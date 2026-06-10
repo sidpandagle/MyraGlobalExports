@@ -3,6 +3,12 @@ import { getPayloadClient } from '@/lib/payload'
 import Papa from 'papaparse'
 
 export async function GET(req: NextRequest) {
+  const adminSecret = process.env.ADMIN_EXPORT_SECRET
+  const provided = req.headers.get('x-admin-secret')
+  if (!adminSecret || provided !== adminSecret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   try {
     const payload = await getPayloadClient()
     const { docs } = await payload.find({

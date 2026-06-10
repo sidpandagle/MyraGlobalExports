@@ -31,7 +31,7 @@ export function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fullName: data.name,
-          country: 'N/A (General Contact)',
+          country: 'N/A (General Contact)', // sentinel value — must stay ≥2 chars for API validation
           productRequired: data.subject,
           email: data.email,
           message: data.message,
