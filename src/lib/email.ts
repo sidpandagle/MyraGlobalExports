@@ -19,16 +19,25 @@ export function buildInquiryEmailSubject(
   return `New Inquiry: ${data.productRequired} from ${data.country} — ${data.fullName}`
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
 export function buildInquiryEmailHtml(data: InquiryData): string {
   const rows: [string, string][] = [
-    ['Full Name', data.fullName],
-    ['Company', data.company ?? '—'],
-    ['Country', data.country],
-    ['Product Required', data.productRequired],
-    ['Quantity', data.quantity ?? '—'],
-    ['Email', data.email],
-    ['WhatsApp', data.whatsapp ?? '—'],
-    ['Message', data.message ?? '—'],
+    ['Full Name', escapeHtml(data.fullName)],
+    ['Company', escapeHtml(data.company ?? '—')],
+    ['Country', escapeHtml(data.country)],
+    ['Product Required', escapeHtml(data.productRequired)],
+    ['Quantity', escapeHtml(data.quantity ?? '—')],
+    ['Email', escapeHtml(data.email)],
+    ['WhatsApp', escapeHtml(data.whatsapp ?? '—')],
+    ['Message', escapeHtml(data.message ?? '—')],
   ]
 
   const tableRows = rows
