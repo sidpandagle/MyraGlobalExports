@@ -1,10 +1,14 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 
-let cached: Awaited<ReturnType<typeof getPayload>> | null = null
+type PayloadClient = Awaited<ReturnType<typeof getPayload>>
 
-export async function getPayloadClient() {
-  if (cached) return cached
-  cached = await getPayload({ config })
-  return cached
+const globalForPayload = globalThis as typeof globalThis & {
+  _payloadClient?: PayloadClient
+}
+
+export async function getPayloadClient(): Promise<PayloadClient> {
+  if (globalForPayload._payloadClient) return globalForPayload._payloadClient
+  globalForPayload._payloadClient = await getPayload({ config })
+  return globalForPayload._payloadClient
 }

@@ -55,6 +55,7 @@ export function Header() {
           className="lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <FiX size={24} /> : <FiMenu size={24} />}
         </button>
