@@ -44,7 +44,7 @@ export function AboutSection() {
           <div className="flex items-center justify-center">
             <div className="relative h-80 w-full max-w-md overflow-hidden rounded-2xl bg-gradient-to-br from-brand-green/10 to-brand-gold/10 lg:h-96">
               <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-                <div className="text-6xl">🌾</div>
+                <div className="text-6xl" aria-hidden="true">🌾</div>
                 <p className="font-heading text-xl font-bold text-brand-green">
                   Farm to World
                 </p>

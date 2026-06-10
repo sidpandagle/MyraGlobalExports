@@ -49,7 +49,7 @@ export function ProductsSection({ products }: Props) {
                       className="object-cover transition-transform group-hover:scale-105"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-4xl">🌾</div>
+                    <div className="flex h-full items-center justify-center text-4xl" aria-hidden="true">🌾</div>
                   )}
                 </div>
                 <div className="p-4">

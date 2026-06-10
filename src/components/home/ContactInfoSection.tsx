@@ -7,13 +7,41 @@ type ContactData = {
 
 type Props = { contact: ContactData }
 
+type ContactItem = {
+  icon: string
+  label: string
+  value: string | null | undefined
+  href?: string
+}
+
 export function ContactInfoSection({ contact }: Props) {
-  const items = [
-    { icon: '📞', label: 'Phone', value: contact.phone },
-    { icon: '💬', label: 'WhatsApp', value: contact.whatsapp },
-    { icon: '✉️', label: 'Email', value: contact.email },
-    { icon: '🕐', label: 'Business Hours', value: contact.businessHours },
-  ].filter((i) => i.value)
+  const items: ContactItem[] = [
+    {
+      icon: '📞',
+      label: 'Phone',
+      value: contact.phone,
+      href: contact.phone ? `tel:${contact.phone}` : undefined,
+    },
+    {
+      icon: '💬',
+      label: 'WhatsApp',
+      value: contact.whatsapp,
+      href: contact.whatsapp
+        ? `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}`
+        : undefined,
+    },
+    {
+      icon: '✉️',
+      label: 'Email',
+      value: contact.email,
+      href: contact.email ? `mailto:${contact.email}` : undefined,
+    },
+    {
+      icon: '🕐',
+      label: 'Business Hours',
+      value: contact.businessHours,
+    },
+  ].filter((i): i is ContactItem & { value: string } => Boolean(i.value))
 
   if (items.length === 0) return null
 
@@ -24,7 +52,7 @@ export function ContactInfoSection({ contact }: Props) {
           Get in Touch
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map(({ icon, label, value }) => (
+          {items.map(({ icon, label, value, href }) => (
             <div key={label} className="rounded-xl bg-white p-6 text-center shadow-sm">
               <div className="mb-2 text-3xl" aria-hidden="true">
                 {icon}
@@ -32,7 +60,13 @@ export function ContactInfoSection({ contact }: Props) {
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
                 {label}
               </p>
-              <p className="text-sm font-medium text-gray-800">{value}</p>
+              {href ? (
+                <a href={href} className="text-sm font-medium text-brand-green hover:underline">
+                  {value}
+                </a>
+              ) : (
+                <p className="text-sm font-medium text-gray-800">{value}</p>
+              )}
             </div>
           ))}
         </div>
