@@ -3,12 +3,62 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cream: #FAF6EE;
+  --fog: #E8DFD0;
+  --stone: #8B7B5E;
+  --bark: #3D2B1A;
+  --forest: #0D3B1A;
+  --amber: #C8882A;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Inter, system-ui, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: #FAF6EE;
+    color: #3D2B1A;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-cormorant), Georgia, serif;
+  }
+}
+
+/* Grain texture overlay for hero-style sections */
+.noise-bg {
+  position: relative;
+}
+.noise-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+.noise-bg > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Underline hover animation helper */
+.hover-rule {
+  position: relative;
+}
+.hover-rule::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+}
+.hover-rule:hover::after {
+  transform: scaleX(1);
 }

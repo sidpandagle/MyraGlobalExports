@@ -1,10 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Plus_Jakarta_Sans, Fraunces } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
+const jakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+})
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-cormorant',
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: { default: 'Myra Global Exports', template: '%s | Myra Global Exports' },
@@ -14,8 +24,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="font-sans">
+    <html lang="en" className={`${jakartaSans.variable} ${fraunces.variable}`}>
+      <body className="font-sans bg-cream">
         {children}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID &&
           process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID !== 'undefined' && (

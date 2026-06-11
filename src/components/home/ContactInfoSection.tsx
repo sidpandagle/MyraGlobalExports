@@ -8,7 +8,6 @@ type ContactData = {
 type Props = { contact: ContactData }
 
 type ContactItem = {
-  icon: string
   label: string
   value: string | null | undefined
   href?: string
@@ -17,13 +16,11 @@ type ContactItem = {
 export function ContactInfoSection({ contact }: Props) {
   const items: ContactItem[] = [
     {
-      icon: '📞',
       label: 'Phone',
       value: contact.phone,
       href: contact.phone ? `tel:${contact.phone}` : undefined,
     },
     {
-      icon: '💬',
       label: 'WhatsApp',
       value: contact.whatsapp,
       href: contact.whatsapp
@@ -31,13 +28,11 @@ export function ContactInfoSection({ contact }: Props) {
         : undefined,
     },
     {
-      icon: '✉️',
       label: 'Email',
       value: contact.email,
       href: contact.email ? `mailto:${contact.email}` : undefined,
     },
     {
-      icon: '🕐',
       label: 'Business Hours',
       value: contact.businessHours,
     },
@@ -46,26 +41,32 @@ export function ContactInfoSection({ contact }: Props) {
   if (items.length === 0) return null
 
   return (
-    <section className="bg-gray-50 py-16">
-      <div className="mx-auto max-w-7xl px-4">
-        <h2 className="mb-10 text-center font-heading text-3xl font-bold text-brand-green">
-          Get in Touch
-        </h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map(({ icon, label, value, href }) => (
-            <div key={label} className="rounded-xl bg-white p-6 text-center shadow-sm">
-              <div className="mb-2 text-3xl" aria-hidden="true">
-                {icon}
-              </div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+    <section className="py-16 bg-cream border-t border-fog">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex items-center gap-4 mb-10 justify-center">
+          <span className="block h-px w-10 bg-brand-gold shrink-0" />
+          <h2 className="text-[11px] font-sans uppercase tracking-[0.3em] text-stone">
+            Get in Touch
+          </h2>
+          <span className="block h-px w-10 bg-brand-gold shrink-0" />
+        </div>
+        <div className="grid grid-cols-1 gap-px bg-fog sm:grid-cols-2 lg:grid-cols-4">
+          {items.map(({ label, value, href }) => (
+            <div key={label} className="bg-white p-8 text-center hover:bg-cream transition-colors">
+              <p className="text-[10px] font-sans font-semibold uppercase tracking-[0.22em] text-stone mb-3">
                 {label}
               </p>
               {href ? (
-                <a href={href} className="text-sm font-medium text-brand-green hover:underline">
+                <a
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="font-heading text-lg font-light text-brand-green hover:text-brand-gold transition-colors"
+                >
                   {value}
                 </a>
               ) : (
-                <p className="text-sm font-medium text-gray-800">{value}</p>
+                <p className="font-heading text-lg font-light text-bark">{value}</p>
               )}
             </div>
           ))}

@@ -27,106 +27,147 @@ async function getContactData(): Promise<ContactData> {
   }
 }
 
+const CONTACT_ITEMS_FALLBACK = [
+  { label: 'Phone', value: '+91 98765 43210', href: 'tel:+919876543210' },
+  { label: 'Email', value: 'info@myraglobalexports.com', href: 'mailto:info@myraglobalexports.com' },
+  { label: 'WhatsApp', value: '+91 98765 43210', href: 'https://wa.me/919876543210' },
+  { label: 'Address', value: 'Maharashtra, India', href: null },
+]
+
 export default async function ContactPage() {
   const c = await getContactData()
 
+  const contactItems = [
+    c.phone && { label: 'Phone', value: c.phone, href: `tel:${c.phone}` },
+    c.email && { label: 'Email', value: c.email, href: `mailto:${c.email}` },
+    c.salesEmail && { label: 'Sales Email', value: c.salesEmail, href: `mailto:${c.salesEmail}` },
+    c.whatsapp && {
+      label: 'WhatsApp',
+      value: c.whatsapp,
+      href: `https://wa.me/${c.whatsapp.replace(/\D/g, '')}`,
+    },
+    c.address && { label: 'Address', value: c.address, href: null },
+    c.businessHours && { label: 'Business Hours', value: c.businessHours, href: null },
+  ].filter(Boolean) as { label: string; value: string; href: string | null }[]
+
+  const displayItems = contactItems.length > 0 ? contactItems : CONTACT_ITEMS_FALLBACK
+
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16">
-      <div className="mb-12 text-center">
-        <h1 className="mb-3 font-heading text-4xl font-bold text-brand-green">Contact Us</h1>
-        <p className="text-gray-500">We&apos;d love to hear from you. Reach out any time.</p>
+    <div className="bg-cream min-h-screen">
+      {/* Page hero */}
+      <div className="bg-brand-green py-20 relative overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E")`,
+            opacity: 0.04,
+          }}
+        />
+        <div className="mx-auto max-w-7xl px-6 relative z-10">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="block h-px w-10 bg-brand-gold shrink-0" />
+            <p className="text-[11px] font-sans uppercase tracking-[0.3em] text-brand-gold/60">
+              Get in Touch
+            </p>
+          </div>
+          <h1
+            className="font-heading font-light text-white leading-tight mb-4"
+            style={{ fontSize: 'clamp(2.8rem, 6vw, 5.5rem)' }}
+          >
+            Contact<br />
+            <em className="italic text-brand-gold">Myra Global</em>
+          </h1>
+          <p className="text-white/50 font-sans text-base">
+            We&apos;d love to hear from you. Reach out any time.
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-        {/* Contact info */}
-        <div>
-          <h2 className="mb-6 text-xl font-bold text-brand-green">Contact Information</h2>
-          <div className="space-y-5">
-            {c.phone && (
-              <div className="flex gap-4">
-                <span className="text-2xl" aria-hidden="true">📞</span>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Phone</p>
-                  <a href={`tel:${c.phone}`} className="font-medium text-gray-800 hover:text-brand-green">
-                    {c.phone}
-                  </a>
-                </div>
-              </div>
-            )}
-            {c.whatsapp && (
-              <div className="flex gap-4">
-                <span className="text-2xl" aria-hidden="true">💬</span>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">WhatsApp</p>
-                  <a
-                    href={`https://wa.me/${c.whatsapp.replace(/\D/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-gray-800 hover:text-brand-green"
-                  >
-                    {c.whatsapp}
-                  </a>
-                </div>
-              </div>
-            )}
-            {c.email && (
-              <div className="flex gap-4">
-                <span className="text-2xl" aria-hidden="true">✉️</span>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Email</p>
-                  <a href={`mailto:${c.email}`} className="font-medium text-gray-800 hover:text-brand-green">
-                    {c.email}
-                  </a>
-                  {c.salesEmail && (
+      {/* Content */}
+      <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+          {/* Contact info */}
+          <div>
+            <div className="flex items-center gap-4 mb-10">
+              <span className="block h-px w-10 bg-brand-gold shrink-0" />
+              <p className="text-[11px] font-sans uppercase tracking-[0.3em] text-stone">
+                Contact Information
+              </p>
+            </div>
+
+            <div className="space-y-0 border border-fog overflow-hidden mb-10">
+              {displayItems.map(({ label, value, href }, i) => (
+                <div
+                  key={label}
+                  className={`flex gap-8 items-start p-6 ${i > 0 ? 'border-t border-fog' : ''} hover:bg-white transition-colors`}
+                >
+                  <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-stone shrink-0 w-28">
+                    {label}
+                  </span>
+                  {href ? (
                     <a
-                      href={`mailto:${c.salesEmail}`}
-                      className="block font-medium text-gray-800 hover:text-brand-green"
+                      href={href}
+                      target={href.startsWith('http') ? '_blank' : undefined}
+                      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="text-bark/70 font-sans text-sm hover:text-brand-green transition-colors whitespace-pre-line"
                     >
-                      {c.salesEmail}
+                      {value}
                     </a>
+                  ) : (
+                    <p className="text-bark/70 font-sans text-sm whitespace-pre-line">{value}</p>
                   )}
                 </div>
-              </div>
-            )}
-            {c.address && (
-              <div className="flex gap-4">
-                <span className="text-2xl" aria-hidden="true">📍</span>
+              ))}
+            </div>
+
+            {/* Response time */}
+            <div className="bg-brand-green p-8 relative overflow-hidden">
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E")`,
+                  opacity: 0.04,
+                }}
+              />
+              <div className="relative z-10 flex items-center gap-6">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Address</p>
-                  <p className="whitespace-pre-line font-medium text-gray-800">{c.address}</p>
+                  <p className="font-heading text-4xl font-light text-brand-gold">24h</p>
+                  <p className="text-[9px] font-sans uppercase tracking-[0.25em] text-white/40 mt-0.5">Response</p>
                 </div>
+                <div className="w-px h-12 bg-white/10" />
+                <p className="text-white/55 font-sans text-sm leading-relaxed">
+                  Our export team responds to all inquiries within one business day.
+                </p>
               </div>
-            )}
-            {c.businessHours && (
-              <div className="flex gap-4">
-                <span className="text-2xl" aria-hidden="true">🕐</span>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Business Hours</p>
-                  <p className="whitespace-pre-line font-medium text-gray-800">{c.businessHours}</p>
-                </div>
+            </div>
+
+            {c.googleMapsEmbedUrl && (
+              <div className="mt-8 overflow-hidden border border-fog">
+                <iframe
+                  src={c.googleMapsEmbedUrl}
+                  width="100%"
+                  height="260"
+                  style={{ border: 0, display: 'block' }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Myra Global Exports Location"
+                />
               </div>
             )}
           </div>
 
-          {c.googleMapsEmbedUrl && (
-            <div className="mt-8 overflow-hidden rounded-xl">
-              <iframe
-                src={c.googleMapsEmbedUrl}
-                width="100%"
-                height="300"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Myra Global Exports Location"
-              />
+          {/* Contact form */}
+          <div>
+            <div className="flex items-center gap-4 mb-10">
+              <span className="block h-px w-10 bg-brand-gold shrink-0" />
+              <p className="text-[11px] font-sans uppercase tracking-[0.3em] text-stone">
+                Send a Message
+              </p>
             </div>
-          )}
-        </div>
-
-        {/* Contact form */}
-        <div className="rounded-2xl border bg-white p-8 shadow-sm">
-          <h2 className="mb-6 text-xl font-bold text-brand-green">Send a Message</h2>
-          <ContactForm />
+            <div className="bg-white border border-fog p-8">
+              <ContactForm />
+            </div>
+          </div>
         </div>
       </div>
     </div>
