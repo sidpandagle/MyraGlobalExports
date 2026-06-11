@@ -55,28 +55,10 @@ const MOCK_PRODUCTS: Product[] = [
   { id: 'm14', name: 'Onion', slug: 'onion', category: 'Vegetables', shortDescription: 'Red and white onions, firm and dry, suitable for long-haul export.' },
 ]
 
-async function getProducts(): Promise<Product[]> {
-  try {
-    const { getPayloadClient } = await import('@/lib/payload')
-    const payload = await getPayloadClient()
-    const result = await payload.find({
-      collection: 'products',
-      where: { visible: { equals: true } },
-      sort: 'sortOrder',
-      limit: 100,
-      depth: 1,
-    })
-    return result.docs as unknown as Product[]
-  } catch {
-    return []
-  }
-}
-
 const CATEGORIES = ['All', 'Grains', 'Spices', 'Oil Seeds', 'Pulses', 'Vegetables', 'Feed']
 
-export default async function ProductsPage() {
-  const dbProducts = await getProducts()
-  const products = dbProducts.length > 0 ? dbProducts : MOCK_PRODUCTS
+export default function ProductsPage() {
+  const products = MOCK_PRODUCTS
 
   return (
     <div className="bg-cream min-h-screen">

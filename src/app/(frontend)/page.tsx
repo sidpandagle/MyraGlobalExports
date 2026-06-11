@@ -6,50 +6,22 @@ import { CertificationsSection } from '@/components/home/CertificationsSection'
 import { ExportMarkets } from '@/components/home/ExportMarkets'
 import { InquirySection } from '@/components/home/InquirySection'
 import { ContactInfoSection } from '@/components/home/ContactInfoSection'
+import { siteSettings } from '@/data/site-settings'
 
-async function getHomeData() {
-  try {
-    const { getPayloadClient } = await import('@/lib/payload')
-    const payload = await getPayloadClient()
-    const [productsResult, certsResult, settings] = await Promise.all([
-      payload.find({
-        collection: 'products',
-        where: {
-          and: [
-            { visible: { equals: true } },
-            { featuredOnHome: { equals: true } },
-          ],
-        },
-        limit: 8,
-        sort: 'sortOrder',
-        depth: 1,
-      }),
-      payload.find({
-        collection: 'certificates',
-        where: { visible: { equals: true } },
-        sort: 'sortOrder',
-        depth: 1,
-      }),
-      payload.findGlobal({ slug: 'site-settings' }),
-    ])
-    return {
-      products: productsResult.docs,
-      certificates: certsResult.docs,
-      settings,
-    }
-  } catch {
-    return { products: [], certificates: [], settings: null }
-  }
-}
+const FEATURED_PRODUCTS = [
+  { id: 'm1', name: 'Basmati Rice', slug: 'basmati-rice', category: 'Grains', shortDescription: 'Premium aged basmati with distinct aroma and long grain.', images: [] },
+  { id: 'm2', name: 'Turmeric', slug: 'turmeric', category: 'Spices', shortDescription: 'High curcumin content, bright golden colour from Erode.', images: [] },
+  { id: 'm3', name: 'Cumin Seeds', slug: 'cumin', category: 'Spices', shortDescription: 'Aromatic cumin sourced from the farms of Rajasthan.', images: [] },
+  { id: 'm4', name: 'Sesame Seeds', slug: 'sesame', category: 'Oil Seeds', shortDescription: 'Export-grade white & black sesame, hull and natural.', images: [] },
+  { id: 'm5', name: 'Red Chilli', slug: 'red-chilli', category: 'Spices', shortDescription: 'Bold flavour and vibrant colour from Guntur, Andhra Pradesh.', images: [] },
+  { id: 'm6', name: 'Groundnuts', slug: 'groundnuts', category: 'Oil Seeds', shortDescription: 'Bold & Java variety groundnuts, aflatoxin tested.', images: [] },
+  { id: 'm7', name: 'Wheat', slug: 'wheat', category: 'Grains', shortDescription: 'Milling and durum wheat with consistent protein content.', images: [] },
+  { id: 'm8', name: 'Pulses & Lentils', slug: 'pulses', category: 'Pulses', shortDescription: 'Toor, moong, masoor, chana — broad pulse export range.', images: [] },
+]
 
-export default async function HomePage() {
-  const { products, certificates, settings } = await getHomeData()
+const { showProducts, showCertificates, showExportMarkets, showContactInfo } = siteSettings.sections
 
-  const showProducts = settings?.sections?.showProducts !== false
-  const showCertificates = settings?.sections?.showCertificates !== false
-  const showExportMarkets = settings?.sections?.showExportMarkets !== false
-  const showContactInfo = settings?.sections?.showContactInfo !== false
-
+export default function HomePage() {
   return (
     <>
       <HeroBanner />
@@ -57,18 +29,18 @@ export default async function HomePage() {
       <WhyChooseUs />
       {showProducts && (
         <ProductsSection
-          products={products as Parameters<typeof ProductsSection>[0]['products']}
+          products={FEATURED_PRODUCTS as Parameters<typeof ProductsSection>[0]['products']}
         />
       )}
       {showCertificates && (
         <CertificationsSection
-          certificates={certificates as Parameters<typeof CertificationsSection>[0]['certificates']}
+          certificates={[] as Parameters<typeof CertificationsSection>[0]['certificates']}
         />
       )}
       {showExportMarkets && <ExportMarkets />}
       <InquirySection />
-      {showContactInfo && settings?.contact && (
-        <ContactInfoSection contact={settings.contact} />
+      {showContactInfo && (
+        <ContactInfoSection contact={siteSettings.contact} />
       )}
     </>
   )

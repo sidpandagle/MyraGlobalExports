@@ -1,40 +1,12 @@
 import type { MetadataRoute } from 'next'
 
-async function getDynamicPaths(): Promise<{
-  products: { slug: string; updatedAt: string }[]
-  news: { slug: string; updatedAt: string }[]
-}> {
-  try {
-    const { getPayloadClient } = await import('@/lib/payload')
-    const payload = await getPayloadClient()
-    const [productsResult, newsResult] = await Promise.all([
-      payload.find({
-        collection: 'products',
-        where: { visible: { equals: true } },
-        limit: 500,
-      }),
-      payload.find({
-        collection: 'news',
-        where: { visible: { equals: true } },
-        limit: 500,
-      }),
-    ])
-    return {
-      products: productsResult.docs.map((p) => ({
-        slug: p.slug as string,
-        updatedAt: p.updatedAt as string,
-      })),
-      news: newsResult.docs.map((n) => ({
-        slug: n.slug as string,
-        updatedAt: n.updatedAt as string,
-      })),
-    }
-  } catch {
-    return { products: [], news: [] }
-  }
-}
+const PRODUCT_SLUGS = [
+  'basmati-rice', 'turmeric', 'cumin', 'sesame', 'red-chilli',
+  'groundnuts', 'wheat', 'soybean', 'coriander', 'mustard',
+  'ginger', 'pulses', 'garlic', 'onion',
+]
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const base =
     process.env.NEXT_PUBLIC_SITE_URL ?? 'https://myraglobalexports.com'
 
@@ -57,21 +29,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }))
 
-  const { products, news } = await getDynamicPaths()
-
-  const productPages = products.map((p) => ({
-    url: `${base}/products/${p.slug}`,
-    lastModified: new Date(p.updatedAt),
+  const productPages = PRODUCT_SLUGS.map((slug) => ({
+    url: `${base}/products/${slug}`,
+    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
 
-  const newsPages = news.map((n) => ({
-    url: `${base}/news/${n.slug}`,
-    lastModified: new Date(n.updatedAt),
-    changeFrequency: 'weekly' as const,
-    priority: 0.6,
-  }))
-
-  return [...staticPages, ...productPages, ...newsPages]
+  return [...staticPages, ...productPages]
 }

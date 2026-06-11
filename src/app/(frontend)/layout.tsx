@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { WhatsAppButton } from '@/components/shared/WhatsAppButton'
+import { siteSettings } from '@/data/site-settings'
 
 export const metadata: Metadata = {
   title: { default: 'Myra Global Exports', template: '%s | Myra Global Exports' },
@@ -9,29 +10,17 @@ export const metadata: Metadata = {
   keywords: ['agricultural exports', 'India export', 'Myra Global', 'food export'],
 }
 
-async function getSiteSettings() {
-  try {
-    const { getPayloadClient } = await import('@/lib/payload')
-    const payload = await getPayloadClient()
-    return await payload.findGlobal({ slug: 'site-settings' })
-  } catch {
-    return null
-  }
-}
-
-export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  const settings = await getSiteSettings()
-
+export default function FrontendLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">{children}</main>
       <Footer
-        contact={settings?.contact}
-        social={settings?.social}
-        sections={settings?.sections}
+        contact={siteSettings.contact}
+        social={siteSettings.social}
+        sections={siteSettings.sections}
       />
-      <WhatsAppButton phone={settings?.contact?.whatsapp ?? '+919999999999'} />
+      <WhatsAppButton phone={siteSettings.contact.whatsapp} />
     </div>
   )
 }

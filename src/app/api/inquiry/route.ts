@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { getPayloadClient } from '@/lib/payload'
 import { sendInquiryNotificationEmail } from '@/lib/email'
 
 const schema = z.object({
@@ -29,9 +28,6 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     )
   }
-
-  const payload = await getPayloadClient()
-  await payload.create({ collection: 'inquiries', data: { ...parsed.data, status: 'new' } })
 
   try {
     await sendInquiryNotificationEmail(parsed.data)

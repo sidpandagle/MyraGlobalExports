@@ -1,41 +1,14 @@
 import type { Metadata } from 'next'
 import { ContactForm } from '@/components/forms/ContactForm'
+import { siteSettings } from '@/data/site-settings'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
   description: 'Get in touch with Myra Global Exports.',
 }
 
-type ContactData = {
-  phone?: string | null
-  whatsapp?: string | null
-  email?: string | null
-  salesEmail?: string | null
-  address?: string | null
-  businessHours?: string | null
-  googleMapsEmbedUrl?: string | null
-}
-
-async function getContactData(): Promise<ContactData> {
-  try {
-    const { getPayloadClient } = await import('@/lib/payload')
-    const payload = await getPayloadClient()
-    const settings = await payload.findGlobal({ slug: 'site-settings' })
-    return (settings.contact as ContactData) ?? {}
-  } catch {
-    return {}
-  }
-}
-
-const CONTACT_ITEMS_FALLBACK = [
-  { label: 'Phone', value: '+91 98765 43210', href: 'tel:+919876543210' },
-  { label: 'Email', value: 'info@myraglobalexports.com', href: 'mailto:info@myraglobalexports.com' },
-  { label: 'WhatsApp', value: '+91 98765 43210', href: 'https://wa.me/919876543210' },
-  { label: 'Address', value: 'Maharashtra, India', href: null },
-]
-
-export default async function ContactPage() {
-  const c = await getContactData()
+export default function ContactPage() {
+  const c = siteSettings.contact
 
   const contactItems = [
     c.phone && { label: 'Phone', value: c.phone, href: `tel:${c.phone}` },
@@ -49,8 +22,6 @@ export default async function ContactPage() {
     c.address && { label: 'Address', value: c.address, href: null },
     c.businessHours && { label: 'Business Hours', value: c.businessHours, href: null },
   ].filter(Boolean) as { label: string; value: string; href: string | null }[]
-
-  const displayItems = contactItems.length > 0 ? contactItems : CONTACT_ITEMS_FALLBACK
 
   return (
     <div className="bg-cream min-h-screen">
@@ -96,7 +67,7 @@ export default async function ContactPage() {
             </div>
 
             <div className="space-y-0 border border-fog overflow-hidden mb-10">
-              {displayItems.map(({ label, value, href }, i) => (
+              {contactItems.map(({ label, value, href }, i) => (
                 <div
                   key={label}
                   className={`flex gap-8 items-start p-6 ${i > 0 ? 'border-t border-fog' : ''} hover:bg-white transition-colors`}

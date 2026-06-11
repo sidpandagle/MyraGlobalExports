@@ -323,36 +323,56 @@ const STATIC_PRODUCTS: Record<string, StaticProduct> = {
     useCases: ['Retail grocery', 'Restaurant supply', 'Food processing', 'Protein ingredient', 'Animal feed'],
     relatedSlugs: ['wheat', 'basmati-rice', 'soybean'],
   },
-}
-
-type ProductImage = {
-  image: { url?: string | null; alt?: string | null } | null
-}
-type DBProduct = {
-  id: string
-  name: string
-  slug: string
-  category?: string | null
-  shortDescription?: string | null
-  description?: unknown
-  packagingInfo?: string | null
-  images?: ProductImage[] | null
-}
-
-async function getDBProduct(slug: string): Promise<DBProduct | null> {
-  try {
-    const { getPayloadClient } = await import('@/lib/payload')
-    const payload = await getPayloadClient()
-    const result = await payload.find({
-      collection: 'products',
-      where: { and: [{ slug: { equals: slug } }, { visible: { equals: true } }] },
-      limit: 1,
-      depth: 1,
-    })
-    return (result.docs[0] as unknown as DBProduct) ?? null
-  } catch {
-    return null
-  }
+  garlic: {
+    name: 'Garlic',
+    slug: 'garlic',
+    category: 'Spices',
+    tagline: 'Strong pungency. Export-ready.',
+    shortDescription: 'Fresh Indian garlic, strong pungency, export-cleaned and graded.',
+    fullDescription:
+      "India is among the world's top garlic exporters, with Madhya Pradesh and Rajasthan being major producing states. Our garlic is carefully graded by bulb size, cleaned and dried to export standards, and packed to withstand long-haul freight. Strong allicin content and low moisture make it ideal for food processing, condiment manufacturing, and retail markets.",
+    origin: 'Madhya Pradesh & Rajasthan, India',
+    emoji: '🧄',
+    accentColor: '#C8882A',
+    specs: [
+      { label: 'Moisture', value: '≤ 65% (fresh) / ≤ 8% (dry)' },
+      { label: 'Diameter', value: '45–65 mm (export grade)' },
+      { label: 'Purity', value: '≥ 95%' },
+      { label: 'Admixture', value: '≤ 2%' },
+      { label: 'Form', value: 'Fresh bulb / Dried / Powder / Flakes' },
+      { label: 'Shelf life', value: '6 months+ (cold storage)' },
+    ],
+    grades: ['Super A Grade (65+ mm)', 'A Grade (55–65 mm)', 'B Grade (45–55 mm)', 'Dehydrated Flakes', 'Garlic Powder'],
+    packaging: ['5 kg mesh bag', '10 kg net bag', '20 kg carton', '500 g retail pack', 'Custom private label'],
+    certifications: ['APEDA', 'FSSAI', 'Phytosanitary Certificate', 'Non-GMO', 'Halal'],
+    useCases: ['Food processing', 'Condiment manufacturing', 'Dehydration & powder', 'Retail grocery', 'Pharmaceutical'],
+    relatedSlugs: ['onion', 'ginger', 'red-chilli'],
+  },
+  onion: {
+    name: 'Onion',
+    slug: 'onion',
+    category: 'Vegetables',
+    tagline: 'Firm, dry, built for long-haul export.',
+    shortDescription: 'Red and white onions, firm and dry, suitable for long-haul export.',
+    fullDescription:
+      "Maharashtra and Karnataka are India's dominant onion-growing states. We export red and white onion varieties selected for firmness, low moisture skin, and extended shelf life under ambient storage conditions. All shipments carry a phytosanitary certificate and are fumigation-treated on request for compliance with destination-country biosecurity requirements.",
+    origin: 'Nashik, Maharashtra & Bangalore Rural, Karnataka',
+    emoji: '🧅',
+    accentColor: '#C0392B',
+    specs: [
+      { label: 'Moisture', value: '≤ 87%' },
+      { label: 'Diameter', value: '40–70 mm (standard export)' },
+      { label: 'Dry skin layers', value: '≥ 2 (good keeping quality)' },
+      { label: 'Admixture', value: '≤ 2%' },
+      { label: 'Sprouts', value: 'Nil' },
+      { label: 'Form', value: 'Fresh / Dehydrated flakes / Powder' },
+    ],
+    grades: ['Export Grade (50–70 mm)', 'Medium Grade (40–60 mm)', 'Super Grade (60+ mm)', 'Dehydrated Flakes', 'Onion Powder'],
+    packaging: ['10 kg mesh bag', '20 kg mesh bag', '25 kg jute bag', 'Custom retail net bag'],
+    certifications: ['APEDA', 'FSSAI', 'Phytosanitary Certificate', 'Non-GMO'],
+    useCases: ['Retail grocery', 'Food processing', 'Dehydration industry', 'Condiment production', 'Restaurant supply'],
+    relatedSlugs: ['garlic', 'ginger', 'red-chilli'],
+  },
 }
 
 export async function generateMetadata({
@@ -362,10 +382,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const staticData = STATIC_PRODUCTS[slug]
-  const dbProduct = await getDBProduct(slug)
-  const name = dbProduct?.name ?? staticData?.name ?? 'Product'
-  const desc = dbProduct?.shortDescription ?? staticData?.shortDescription ?? ''
-  return { title: name, description: desc }
+  if (!staticData) return { title: 'Product Not Found' }
+  return { title: staticData.name, description: staticData.shortDescription }
 }
 
 export default async function ProductDetailPage({
@@ -374,31 +392,11 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const staticData = STATIC_PRODUCTS[slug]
-  const dbProduct = await getDBProduct(slug)
+  const product = STATIC_PRODUCTS[slug]
 
-  if (!staticData && !dbProduct) notFound()
+  if (!product) notFound()
 
-  const product = staticData ?? {
-    name: dbProduct!.name,
-    slug: dbProduct!.slug,
-    category: dbProduct!.category ?? 'Agricultural',
-    tagline: dbProduct!.shortDescription ?? '',
-    shortDescription: dbProduct!.shortDescription ?? '',
-    fullDescription: '',
-    origin: 'India',
-    emoji: '🌾',
-    accentColor: '#C8882A',
-    specs: dbProduct!.packagingInfo ? [{ label: 'Packaging', value: dbProduct!.packagingInfo }] : [],
-    grades: [],
-    packaging: [],
-    certifications: ['APEDA', 'FSSAI'],
-    useCases: [],
-    relatedSlugs: [],
-  }
-
-  const images = dbProduct?.images ?? []
-  const firstImage = images[0]?.image
+  const firstImage = null as { url: string; alt?: string | null } | null
 
   const relatedProducts = product.relatedSlugs
     .map((s) => STATIC_PRODUCTS[s])
