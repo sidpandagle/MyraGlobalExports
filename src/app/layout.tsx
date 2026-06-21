@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   title: { default: 'Myra Global Exports', template: '%s | Myra Global Exports' },
   description: 'Premium agricultural export company. Connecting the World. Empowering Futures.',
   keywords: ['agricultural exports', 'India export', 'Myra Global', 'food export'],
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
