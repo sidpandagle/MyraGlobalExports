@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { FiMenu, FiX } from 'react-icons/fi'
@@ -33,18 +34,15 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 items-center justify-center bg-brand-green shrink-0">
-            <span className="font-heading text-sm font-bold text-white tracking-wider">MG</span>
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-heading text-xl font-semibold text-brand-green tracking-tight">
-              Myra Global
-            </span>
-            <span className="text-[9px] tracking-[0.3em] uppercase text-stone font-sans mt-0.5">
-              Exports
-            </span>
-          </div>
+        <Link href="/" className="flex items-center group">
+          <Image
+            src="/logo.png"
+            alt="Myra Global Exports"
+            width={52}
+            height={52}
+            className="object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop nav */}

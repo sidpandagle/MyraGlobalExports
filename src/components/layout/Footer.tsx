@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { SocialLinks } from '@/components/shared/SocialLinks'
 
@@ -45,14 +46,18 @@ export function Footer({ contact, social, sections }: FooterProps) {
       {/* Top bar */}
       <div className="border-b border-white/10 px-6 py-6">
         <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center bg-brand-gold shrink-0">
-              <span className="font-heading text-xs font-bold text-white">MG</span>
-            </div>
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            <Image
+              src="/logo.png"
+              alt="Myra Global Exports"
+              width={160}
+              height={160}
+              className="w-1/2 sm:w-40 h-auto object-contain brightness-0 invert shrink-0"
+            />
             <div>
-              <p className="font-heading text-xl font-semibold text-white tracking-tight">Myra Global Exports</p>
-              <p className="text-[9px] tracking-[0.3em] uppercase text-white/40 font-sans mt-0.5">
-                Connecting the World · Empowering Futures
+              <p className="font-heading text-lg font-semibold text-white tracking-tight">Myra Global Exports</p>
+              <p className="text-[9px] tracking-[0.25em] uppercase text-white/40 font-sans mt-1">
+                Connecting the World<br />Empowering Futures
               </p>
             </div>
           </div>
