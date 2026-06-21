@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   description: 'Premium agricultural export company. Connecting the World. Empowering Futures.',
   keywords: ['agricultural exports', 'India export', 'Myra Global', 'food export'],
   icons: {
-    icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
 }
