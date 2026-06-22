@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Products',
@@ -8,57 +9,31 @@ export const metadata: Metadata = {
     "Browse Myra Global Exports' range of premium agricultural products available for export.",
 }
 
-type ProductImage = {
-  image: { url?: string | null; alt?: string | null } | null
-}
-
-type Product = {
-  id: string
-  name: string
-  slug: string
-  category?: string | null
-  shortDescription?: string | null
-  images?: ProductImage[] | null
-}
-
-const STATIC_IMAGES: Record<string, string> = {
-  'basmati-rice': '/products/basmati-rice.png',
-  'turmeric': '/products/turmeric.png',
-  'cumin': '/products/cumin-seeds.png',
-  'sesame': '/products/sesame-seeds.png',
-  'red-chilli': '/products/red-chilli.png',
-  'groundnuts': '/products/groundnuts.png',
-  'wheat': '/products/wheat.png',
-  'soybean': '/products/soybean.png',
-  'coriander': '/products/coriander-seeds.png',
-  'mustard': '/products/mustard-seeds.png',
-  'ginger': '/products/ginger.png',
-  'pulses': '/products/pulses-lentils.png',
-  'garlic': '/products/garlic.png',
-  'onion': '/products/red-onion.png',
-}
-
-const MOCK_PRODUCTS: Product[] = [
-  { id: 'm1', name: 'Basmati Rice', slug: 'basmati-rice', category: 'Grains', shortDescription: 'Premium aged basmati with distinct aroma and long grain.' },
-  { id: 'm2', name: 'Turmeric', slug: 'turmeric', category: 'Spices', shortDescription: 'High curcumin content, bright golden colour from Erode.' },
-  { id: 'm3', name: 'Cumin Seeds', slug: 'cumin', category: 'Spices', shortDescription: 'Aromatic cumin sourced from the farms of Rajasthan.' },
-  { id: 'm4', name: 'Sesame Seeds', slug: 'sesame', category: 'Oil Seeds', shortDescription: 'Export-grade white & black sesame, hull and natural.' },
-  { id: 'm5', name: 'Red Chilli', slug: 'red-chilli', category: 'Spices', shortDescription: 'Bold flavour and vibrant colour from Guntur, Andhra Pradesh.' },
-  { id: 'm6', name: 'Groundnuts', slug: 'groundnuts', category: 'Oil Seeds', shortDescription: 'Bold & Java variety groundnuts, aflatoxin tested.' },
-  { id: 'm7', name: 'Wheat', slug: 'wheat', category: 'Grains', shortDescription: 'Milling and durum wheat with consistent protein content.' },
-  { id: 'm8', name: 'Soybean Meal', slug: 'soybean', category: 'Feed', shortDescription: 'High-protein soybean meal for feed and food processing.' },
-  { id: 'm9', name: 'Coriander Seeds', slug: 'coriander', category: 'Spices', shortDescription: 'Clean, machine-processed coriander with warm citrus notes.' },
-  { id: 'm10', name: 'Mustard Seeds', slug: 'mustard', category: 'Oil Seeds', shortDescription: 'Yellow and black mustard seeds, food-grade quality.' },
-  { id: 'm11', name: 'Ginger', slug: 'ginger', category: 'Spices', shortDescription: 'Fresh and dried ginger with high oleoresin content.' },
-  { id: 'm12', name: 'Pulses & Lentils', slug: 'pulses', category: 'Pulses', shortDescription: 'Toor, moong, masoor, chana — broad pulse export range.' },
-  { id: 'm13', name: 'Garlic', slug: 'garlic', category: 'Spices', shortDescription: 'Fresh Indian garlic, strong pungency, export-cleaned and graded.' },
-  { id: 'm14', name: 'Onion', slug: 'onion', category: 'Vegetables', shortDescription: 'Red and white onions, firm and dry, suitable for long-haul export.' },
+const CATEGORIES = [
+  'All', 'Fresh Vegetables', 'Fresh Fruits', 'Spices',
+  'Grains', 'Pulses', 'Oil Seeds', 'Herbs',
 ]
 
-const CATEGORIES = ['All', 'Grains', 'Spices', 'Oil Seeds', 'Pulses', 'Vegetables', 'Feed']
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>
+}) {
+  const { category } = await searchParams
+  const supabase = await createClient()
 
-export default function ProductsPage() {
-  const products = MOCK_PRODUCTS
+  let query = supabase
+    .from('products')
+    .select('id, name, slug, category, short_description, images, emoji, accent_color')
+    .eq('is_published', true)
+    .eq('is_future', false)
+    .order('display_order')
+
+  if (category && category !== 'All') {
+    query = query.eq('category', category)
+  }
+
+  const { data: products } = await query
 
   return (
     <div className="bg-cream min-h-screen">
@@ -95,12 +70,17 @@ export default function ProductsPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex gap-0 overflow-x-auto scrollbar-hide">
             {CATEGORIES.map((cat) => (
-              <button
+              <Link
                 key={cat}
-                className="px-5 py-4 text-[11px] font-sans font-semibold uppercase tracking-[0.14em] text-bark/50 hover:text-brand-green transition-colors shrink-0 border-b-2 border-transparent hover:border-brand-gold"
+                href={cat === 'All' ? '/products' : `/products?category=${encodeURIComponent(cat)}`}
+                className={`px-5 py-4 text-[11px] font-sans font-semibold uppercase tracking-[0.14em] shrink-0 border-b-2 transition-colors ${
+                  (cat === 'All' && !category) || category === cat
+                    ? 'text-brand-green border-brand-gold'
+                    : 'text-bark/50 border-transparent hover:text-brand-green hover:border-brand-gold'
+                }`}
               >
                 {cat}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
@@ -109,12 +89,12 @@ export default function ProductsPage() {
       {/* Products grid */}
       <div className="mx-auto max-w-7xl px-6 py-16">
         <p className="text-[11px] font-sans uppercase tracking-[0.2em] text-stone mb-8">
-          Showing {products.length} products
+          Showing {products?.length ?? 0} products
         </p>
 
         <div className="grid grid-cols-1 gap-px bg-fog sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((product) => {
-            const imgObj = product.images?.[0]?.image
+          {products?.map((product) => {
+            const firstImage = (product.images as { url: string; alt?: string | null }[])?.[0]
             return (
               <Link
                 key={product.id}
@@ -122,16 +102,21 @@ export default function ProductsPage() {
                 className="group bg-white hover:bg-cream transition-colors duration-200 flex flex-col overflow-hidden"
               >
                 <div className="relative h-52 bg-fog/50 overflow-hidden">
-                  {(imgObj?.url || STATIC_IMAGES[product.slug]) ? (
+                  {firstImage?.url ? (
                     <Image
-                      src={imgObj?.url ?? STATIC_IMAGES[product.slug]!}
-                      alt={imgObj?.alt ?? product.name}
+                      src={firstImage.url}
+                      alt={firstImage.alt ?? product.name}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="flex h-full flex-col items-center justify-center">
-                      <span className="text-5xl" aria-hidden="true">🌾</span>
+                    <div
+                      className="flex h-full flex-col items-center justify-center"
+                      style={{ background: `${product.accent_color}15` }}
+                    >
+                      <span className="text-5xl" aria-hidden="true">
+                        {(product.emoji as string) || '🌾'}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -144,9 +129,9 @@ export default function ProductsPage() {
                   <h3 className="font-heading text-xl font-semibold text-bark mb-2 leading-tight">
                     {product.name}
                   </h3>
-                  {product.shortDescription && (
+                  {product.short_description && (
                     <p className="text-[13px] font-sans text-bark/55 line-clamp-2 leading-relaxed flex-1">
-                      {product.shortDescription}
+                      {product.short_description}
                     </p>
                   )}
                   <div className="mt-4 flex items-center gap-2 text-[11px] font-sans font-semibold uppercase tracking-[0.14em] text-brand-green group-hover:text-brand-gold transition-colors">

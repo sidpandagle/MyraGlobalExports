@@ -20,8 +20,8 @@ export const siteSettings = {
     showCertificates: true,
     showExportMarkets: true,
     showContactInfo: true,
-    showGallery: false,
-    showNews: false,
+    showGallery: true,
+    showNews: true,
     showPartners: false,
   },
   downloads: {

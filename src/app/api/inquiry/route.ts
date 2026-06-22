@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { sendInquiryNotificationEmail } from '@/lib/email'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 const schema = z.object({
   fullName: z.string().min(2),
@@ -29,10 +29,25 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  try {
-    await sendInquiryNotificationEmail(parsed.data)
-  } catch (err) {
-    console.error('Email notification failed:', err)
+  const { fullName, company, country, productRequired, quantity, email, whatsapp, message } = parsed.data
+
+  const supabase = createAdminClient()
+  const { error } = await supabase.from('leads').insert({
+    full_name: fullName,
+    company: company ?? null,
+    country,
+    product_required: productRequired,
+    quantity: quantity ?? null,
+    email,
+    whatsapp: whatsapp ?? null,
+    message: message ?? null,
+    source: req.headers.get('referer') ?? null,
+    status: 'new',
+  })
+
+  if (error) {
+    console.error('Lead insert error:', error)
+    return NextResponse.json({ error: 'Failed to save inquiry' }, { status: 500 })
   }
 
   return NextResponse.json({ success: true }, { status: 201 })
