@@ -7,36 +7,51 @@ import { ExportMarkets } from '@/components/home/ExportMarkets'
 import { InquirySection } from '@/components/home/InquirySection'
 import { ContactInfoSection } from '@/components/home/ContactInfoSection'
 import { siteSettings } from '@/data/site-settings'
-
-const FEATURED_PRODUCTS = [
-  { id: 'm1', name: 'Basmati Rice', slug: 'basmati-rice', category: 'Grains', shortDescription: 'Premium aged basmati with distinct aroma and long grain.', images: [] },
-  { id: 'm2', name: 'Turmeric', slug: 'turmeric', category: 'Spices', shortDescription: 'High curcumin content, bright golden colour from Erode.', images: [] },
-  { id: 'm3', name: 'Cumin Seeds', slug: 'cumin', category: 'Spices', shortDescription: 'Aromatic cumin sourced from the farms of Rajasthan.', images: [] },
-  { id: 'm4', name: 'Sesame Seeds', slug: 'sesame', category: 'Oil Seeds', shortDescription: 'Export-grade white & black sesame, hull and natural.', images: [] },
-  { id: 'm5', name: 'Red Chilli', slug: 'red-chilli', category: 'Spices', shortDescription: 'Bold flavour and vibrant colour from Guntur, Andhra Pradesh.', images: [] },
-  { id: 'm6', name: 'Groundnuts', slug: 'groundnuts', category: 'Oil Seeds', shortDescription: 'Bold & Java variety groundnuts, aflatoxin tested.', images: [] },
-  { id: 'm7', name: 'Wheat', slug: 'wheat', category: 'Grains', shortDescription: 'Milling and durum wheat with consistent protein content.', images: [] },
-  { id: 'm8', name: 'Pulses & Lentils', slug: 'pulses', category: 'Pulses', shortDescription: 'Toor, moong, masoor, chana — broad pulse export range.', images: [] },
-]
+import { createClient } from '@/lib/supabase/server'
+import type { ProductImage } from '@/types/database'
 
 const { showProducts, showCertificates, showExportMarkets, showContactInfo } = siteSettings.sections
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient()
+
+  const [{ data: rawProducts }, { data: rawCerts }] = await Promise.all([
+    supabase
+      .from('products')
+      .select('id, name, slug, category, short_description, images')
+      .eq('is_published', true)
+      .eq('is_future', false)
+      .order('display_order')
+      .limit(8),
+    supabase
+      .from('certifications')
+      .select('id, name, logo_url, description')
+      .order('display_order'),
+  ])
+
+  const products = (rawProducts ?? []).map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    category: p.category,
+    shortDescription: p.short_description,
+    images: (p.images as ProductImage[]).map((img) => ({ image: img })),
+  }))
+
+  const certificates = (rawCerts ?? []).map((c) => ({
+    id: c.id,
+    title: c.name,
+    certificateNumber: c.description,
+    image: c.logo_url ? { url: c.logo_url, alt: c.name } : null,
+  }))
+
   return (
     <>
       <HeroBanner />
       <AboutSection />
       <WhyChooseUs />
-      {showProducts && (
-        <ProductsSection
-          products={FEATURED_PRODUCTS as Parameters<typeof ProductsSection>[0]['products']}
-        />
-      )}
-      {showCertificates && (
-        <CertificationsSection
-          certificates={[] as Parameters<typeof CertificationsSection>[0]['certificates']}
-        />
-      )}
+      {showProducts && <ProductsSection products={products} />}
+      {showCertificates && <CertificationsSection certificates={certificates} />}
       {showExportMarkets && <ExportMarkets />}
       <InquirySection />
       {showContactInfo && (

@@ -9,6 +9,18 @@
   --bark: #3D2B1A;
   --forest: #0D3B1A;
   --amber: #C8882A;
+
+  /* Admin panel */
+  --admin-bg: #EFE9DF;
+  --admin-sidebar: #0D3B1A;
+  --admin-sidebar-hover: #163d22;
+  --admin-sidebar-active-bg: rgba(200, 136, 42, 0.16);
+  --admin-sidebar-active-text: #E8A030;
+  --admin-sidebar-text: rgba(250, 246, 238, 0.7);
+  --admin-border: #DDD5C5;
+  --admin-text: #2A1C0C;
+  --admin-muted: #6B5A45;
+  --admin-accent: #C8882A;
 }
 
 @layer base {

@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { deleteProduct, togglePublished } from './actions'
 
 export default async function AdminProductsPage() {
@@ -14,60 +12,138 @@ export default async function AdminProductsPage() {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-neutral-900">Products</h1>
-        <Button asChild>
-          <Link href="/admin/products/new">+ New Product</Link>
-        </Button>
+        <div>
+          <h1 className="text-2xl font-semibold" style={{ color: 'var(--admin-text)' }}>
+            Products
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--admin-muted)' }}>
+            {products?.length ?? 0} products
+          </p>
+        </div>
+        <Link
+          href="/admin/products/new"
+          className="text-sm font-medium px-4 py-2 rounded-md transition-colors"
+          style={{ backgroundColor: 'var(--admin-accent)', color: 'white' }}
+        >
+          + New Product
+        </Link>
       </div>
 
-      <div className="bg-white border border-neutral-200 rounded-lg overflow-hidden">
+      <div
+        className="bg-white rounded-lg overflow-hidden"
+        style={{ border: '1px solid var(--admin-border)' }}
+      >
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-neutral-200 bg-neutral-50">
-              <th className="px-4 py-3 text-left font-medium text-neutral-500 w-12">Order</th>
-              <th className="px-4 py-3 text-left font-medium text-neutral-500">Name</th>
-              <th className="px-4 py-3 text-left font-medium text-neutral-500">Category</th>
-              <th className="px-4 py-3 text-left font-medium text-neutral-500">Status</th>
-              <th className="px-4 py-3 text-right font-medium text-neutral-500">Actions</th>
+            <tr style={{ borderBottom: '1px solid var(--admin-border)', backgroundColor: 'var(--admin-bg)' }}>
+              <th className="px-4 py-3 text-left text-xs font-semibold w-12" style={{ color: 'var(--admin-muted)' }}>
+                #
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Name
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Category
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Status
+              </th>
+              <th className="px-4 py-3 text-right text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
-            {products?.map((p) => (
-              <tr key={p.id} className="border-b border-neutral-100 hover:bg-neutral-50">
-                <td className="px-4 py-3 text-neutral-400 text-xs">{p.display_order}</td>
-                <td className="px-4 py-3">
-                  <span className="font-medium text-neutral-800">{p.name}</span>
-                  <span className="ml-2 text-xs text-neutral-400">{p.slug}</span>
+            {products?.map((p, i) => (
+              <tr
+                key={p.id}
+                className="transition-colors hover:bg-[#FAF8F4]"
+                style={{
+                  borderBottom:
+                    i < (products.length - 1) ? '1px solid var(--admin-border)' : undefined,
+                }}
+              >
+                <td className="px-4 py-3 text-xs" style={{ color: 'var(--admin-muted)' }}>
+                  {p.display_order}
                 </td>
-                <td className="px-4 py-3 text-neutral-500">{p.category}</td>
+                <td className="px-4 py-3">
+                  <span className="font-medium" style={{ color: 'var(--admin-text)' }}>
+                    {p.name}
+                  </span>
+                  <span className="ml-2 text-xs" style={{ color: 'var(--admin-muted)' }}>
+                    {p.slug}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-sm" style={{ color: 'var(--admin-muted)' }}>
+                  {p.category}
+                </td>
                 <td className="px-4 py-3">
                   {p.is_future ? (
-                    <Badge variant="secondary">Future</Badge>
+                    <span
+                      className="text-xs font-medium px-2 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: 'rgba(200,136,42,0.12)',
+                        color: '#8B5E1A',
+                      }}
+                    >
+                      Future
+                    </span>
                   ) : p.is_published ? (
-                    <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-100">Live</Badge>
+                    <span
+                      className="text-xs font-medium px-2 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: 'rgba(13,59,26,0.1)',
+                        color: '#0D3B1A',
+                      }}
+                    >
+                      Live
+                    </span>
                   ) : (
-                    <Badge variant="secondary">Draft</Badge>
+                    <span
+                      className="text-xs font-medium px-2 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: 'rgba(42,28,12,0.08)',
+                        color: 'var(--admin-muted)',
+                      }}
+                    >
+                      Draft
+                    </span>
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex gap-2 justify-end">
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link href={`/admin/products/${p.id}`}>Edit</Link>
-                    </Button>
+                  <div className="flex gap-1.5 justify-end">
+                    <Link
+                      href={`/admin/products/${p.id}`}
+                      className="text-xs px-3 py-1.5 rounded-md font-medium transition-colors"
+                      style={{
+                        backgroundColor: 'var(--admin-bg)',
+                        color: 'var(--admin-text)',
+                        border: '1px solid var(--admin-border)',
+                      }}
+                    >
+                      Edit
+                    </Link>
                     <form action={togglePublished.bind(null, p.id, p.is_published)}>
-                      <Button variant="ghost" size="sm" type="submit">
+                      <button
+                        type="submit"
+                        className="text-xs px-3 py-1.5 rounded-md font-medium transition-colors"
+                        style={{
+                          backgroundColor: 'var(--admin-bg)',
+                          color: 'var(--admin-text)',
+                          border: '1px solid var(--admin-border)',
+                        }}
+                      >
                         {p.is_published ? 'Unpublish' : 'Publish'}
-                      </Button>
+                      </button>
                     </form>
                     <form action={deleteProduct.bind(null, p.id, p.slug)}>
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <button
                         type="submit"
-                        className="text-red-500 hover:text-red-700"
+                        className="text-xs px-3 py-1.5 rounded-md font-medium transition-colors"
+                        style={{ color: '#B84040' }}
                       >
                         Delete
-                      </Button>
+                      </button>
                     </form>
                   </div>
                 </td>
@@ -75,6 +151,11 @@ export default async function AdminProductsPage() {
             ))}
           </tbody>
         </table>
+        {!products?.length && (
+          <p className="text-center py-12 text-sm" style={{ color: 'var(--admin-muted)' }}>
+            No products yet.
+          </p>
+        )}
       </div>
     </div>
   )

@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -49,20 +48,35 @@ function ArrayEditor({
               }}
               className="flex-1 h-8 text-sm"
             />
-            <Button
+            <button
               type="button"
-              variant="ghost"
-              size="sm"
-              className="h-8 px-2 text-red-500"
+              className="h-8 px-2 text-sm text-red-500 hover:text-red-700 transition-colors"
               onClick={() => onChange(value.filter((_, j) => j !== i))}
             >
               ✕
-            </Button>
+            </button>
           </div>
         ))}
-        <Button type="button" variant="outline" size="sm" onClick={() => onChange([...value, ''])}>
+        <button
+          type="button"
+          className="text-xs font-medium px-3 py-1.5 rounded-md border transition-colors"
+          style={{
+            borderColor: 'var(--admin-border)',
+            color: 'var(--admin-muted)',
+            backgroundColor: 'transparent',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--admin-bg)'
+            e.currentTarget.style.color = 'var(--admin-text)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent'
+            e.currentTarget.style.color = 'var(--admin-muted)'
+          }}
+          onClick={() => onChange([...value, ''])}
+        >
           + Add {label.toLowerCase().replace(/s$/, '')}
-        </Button>
+        </button>
       </div>
     </div>
   )
@@ -112,14 +126,26 @@ function SpecsEditor({
             </Button>
           </div>
         ))}
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
+          className="text-xs font-medium px-3 py-1.5 rounded-md border transition-colors"
+          style={{
+            borderColor: 'var(--admin-border)',
+            color: 'var(--admin-muted)',
+            backgroundColor: 'transparent',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--admin-bg)'
+            e.currentTarget.style.color = 'var(--admin-text)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent'
+            e.currentTarget.style.color = 'var(--admin-muted)'
+          }}
           onClick={() => onChange([...value, { label: '', value: '' }])}
         >
           + Add spec
-        </Button>
+        </button>
       </div>
     </div>
   )
@@ -339,12 +365,22 @@ export function ProductForm({ product }: Props) {
         <h2 className="text-lg font-semibold text-neutral-800">Visibility</h2>
         <div className="flex gap-8">
           <div className="flex items-center gap-3">
-            <Switch checked={isPublished} onCheckedChange={setIsPublished} id="published" />
-            <Label htmlFor="published">Published</Label>
+            <Switch
+              checked={isPublished}
+              onCheckedChange={setIsPublished}
+              id="published"
+              className="data-[state=checked]:bg-[#C8882A] data-[state=unchecked]:bg-[#C0B2A0] [&>span]:bg-white [&>span]:shadow-sm"
+            />
+            <Label htmlFor="published" className="cursor-pointer" style={{ color: 'var(--admin-text)' }}>Published</Label>
           </div>
           <div className="flex items-center gap-3">
-            <Switch checked={isFuture} onCheckedChange={setIsFuture} id="future" />
-            <Label htmlFor="future">Future Product (name only)</Label>
+            <Switch
+              checked={isFuture}
+              onCheckedChange={setIsFuture}
+              id="future"
+              className="data-[state=checked]:bg-[#C8882A] data-[state=unchecked]:bg-[#C0B2A0] [&>span]:bg-white [&>span]:shadow-sm"
+            />
+            <Label htmlFor="future" className="cursor-pointer" style={{ color: 'var(--admin-text)' }}>Future Product (name only)</Label>
           </div>
         </div>
       </section>
@@ -352,12 +388,26 @@ export function ProductForm({ product }: Props) {
       {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</p>}
 
       <div className="flex gap-3">
-        <Button type="submit" disabled={saving}>
+        <button
+          type="submit"
+          disabled={saving}
+          className="px-5 py-2 rounded-md text-sm font-medium transition-opacity disabled:opacity-60"
+          style={{ backgroundColor: 'var(--admin-accent)', color: 'white' }}
+        >
           {saving ? 'Saving…' : product ? 'Save changes' : 'Create product'}
-        </Button>
-        <Button type="button" variant="outline" onClick={() => router.push('/admin/products')}>
+        </button>
+        <button
+          type="button"
+          className="px-5 py-2 rounded-md text-sm font-medium border transition-colors hover:bg-[#DDD5C5]/40"
+          style={{
+            borderColor: 'var(--admin-border)',
+            color: 'var(--admin-text)',
+            backgroundColor: 'transparent',
+          }}
+          onClick={() => router.push('/admin/products')}
+        >
           Cancel
-        </Button>
+        </button>
       </div>
     </form>
   )

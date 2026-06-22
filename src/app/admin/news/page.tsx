@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { deletePost } from './actions'
 
 export default async function AdminNewsPage() {
@@ -14,48 +12,98 @@ export default async function AdminNewsPage() {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-neutral-900">News</h1>
-        <Button asChild><Link href="/admin/news/new">+ New Post</Link></Button>
+        <div>
+          <h1 className="text-2xl font-semibold" style={{ color: 'var(--admin-text)' }}>
+            News
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--admin-muted)' }}>
+            {posts?.length ?? 0} posts
+          </p>
+        </div>
+        <Link
+          href="/admin/news/new"
+          className="text-sm font-medium px-4 py-2 rounded-md transition-colors"
+          style={{ backgroundColor: 'var(--admin-accent)', color: 'white' }}
+        >
+          + New Post
+        </Link>
       </div>
-      <div className="bg-white border border-neutral-200 rounded-lg overflow-hidden">
+
+      <div
+        className="bg-white rounded-lg overflow-hidden"
+        style={{ border: '1px solid var(--admin-border)' }}
+      >
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-neutral-200 bg-neutral-50">
-              <th className="px-4 py-3 text-left font-medium text-neutral-500">Title</th>
-              <th className="px-4 py-3 text-left font-medium text-neutral-500">Status</th>
-              <th className="px-4 py-3 text-left font-medium text-neutral-500">Date</th>
-              <th className="px-4 py-3 text-right font-medium text-neutral-500">Actions</th>
+            <tr style={{ borderBottom: '1px solid var(--admin-border)', backgroundColor: 'var(--admin-bg)' }}>
+              <th className="px-4 py-3 text-left text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Title
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Status
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Date
+              </th>
+              <th className="px-4 py-3 text-right text-xs font-semibold" style={{ color: 'var(--admin-muted)' }}>
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
-            {posts?.map((p) => (
-              <tr key={p.id} className="border-b border-neutral-100 hover:bg-neutral-50">
+            {posts?.map((p, i) => (
+              <tr
+                key={p.id}
+                className="transition-colors hover:bg-[#FAF8F4]"
+                style={{
+                  borderBottom:
+                    i < (posts.length - 1) ? '1px solid var(--admin-border)' : undefined,
+                }}
+              >
                 <td className="px-4 py-3">
-                  <span className="font-medium text-neutral-800">{p.title}</span>
-                  <span className="ml-2 text-xs text-neutral-400">{p.slug}</span>
+                  <span className="font-medium" style={{ color: 'var(--admin-text)' }}>
+                    {p.title}
+                  </span>
+                  <span className="ml-2 text-xs" style={{ color: 'var(--admin-muted)' }}>
+                    {p.slug}
+                  </span>
                 </td>
                 <td className="px-4 py-3">
-                  <Badge className={p.is_published ? 'bg-green-100 text-green-800 hover:bg-green-100' : ''} variant={p.is_published ? 'default' : 'secondary'}>
+                  <span
+                    className="text-xs font-medium px-2 py-0.5 rounded-full"
+                    style={
+                      p.is_published
+                        ? { backgroundColor: 'rgba(13,59,26,0.1)', color: '#0D3B1A' }
+                        : { backgroundColor: 'rgba(42,28,12,0.08)', color: 'var(--admin-muted)' }
+                    }
+                  >
                     {p.is_published ? 'Published' : 'Draft'}
-                  </Badge>
+                  </span>
                 </td>
-                <td className="px-4 py-3 text-neutral-500 text-xs">
+                <td className="px-4 py-3 text-xs" style={{ color: 'var(--admin-muted)' }}>
                   {new Date(p.published_at ?? p.created_at).toLocaleDateString('en-IN')}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex gap-2 justify-end">
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link href={`/admin/news/${p.id}`}>Edit</Link>
-                    </Button>
+                  <div className="flex gap-1.5 justify-end">
+                    <Link
+                      href={`/admin/news/${p.id}`}
+                      className="text-xs px-3 py-1.5 rounded-md font-medium transition-colors"
+                      style={{
+                        backgroundColor: 'var(--admin-bg)',
+                        color: 'var(--admin-text)',
+                        border: '1px solid var(--admin-border)',
+                      }}
+                    >
+                      Edit
+                    </Link>
                     <form action={deletePost.bind(null, p.id)}>
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <button
                         type="submit"
-                        className="text-red-500 hover:text-red-700"
+                        className="text-xs px-3 py-1.5 rounded-md font-medium"
+                        style={{ color: '#B84040' }}
                       >
                         Delete
-                      </Button>
+                      </button>
                     </form>
                   </div>
                 </td>
@@ -63,6 +111,11 @@ export default async function AdminNewsPage() {
             ))}
           </tbody>
         </table>
+        {!posts?.length && (
+          <p className="text-center py-12 text-sm" style={{ color: 'var(--admin-muted)' }}>
+            No posts yet.
+          </p>
+        )}
       </div>
     </div>
   )
