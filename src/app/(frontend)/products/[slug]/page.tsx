@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Product, ProductSpec, ProductImage } from '@/types/database'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://myraglobalexports.com'
+
 export async function generateMetadata({
   params,
 }: {
@@ -14,12 +16,23 @@ export async function generateMetadata({
   const supabase = await createClient()
   const { data } = await supabase
     .from('products')
-    .select('name, short_description')
+    .select('name, short_description, images')
     .eq('slug', slug)
     .eq('is_published', true)
     .single()
   if (!data) return { title: 'Product Not Found' }
-  return { title: data.name, description: data.short_description ?? undefined }
+  const firstImage = (data.images as ProductImage[])?.[0]
+  return {
+    title: data.name,
+    description: data.short_description ?? undefined,
+    alternates: { canonical: `${SITE_URL}/products/${slug}` },
+    openGraph: {
+      title: `${data.name} | Myra Global Exports`,
+      description: data.short_description ?? undefined,
+      url: `${SITE_URL}/products/${slug}`,
+      ...(firstImage?.url ? { images: [{ url: firstImage.url }] } : {}),
+    },
+  }
 }
 
 export default async function ProductDetailPage({
@@ -60,8 +73,35 @@ export default async function ProductDetailPage({
   const certifications = typedProduct.certifications as string[]
   const useCases = typedProduct.use_cases as string[]
 
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: typedProduct.name,
+    description: typedProduct.short_description ?? typedProduct.full_description ?? undefined,
+    brand: { '@type': 'Organization', name: 'Myra Global Exports' },
+    ...(firstImage?.url ? { image: firstImage.url } : {}),
+    ...(typedProduct.origin ? { countryOfOrigin: typedProduct.origin } : {}),
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: 'Myra Global Exports' },
+    },
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Products', item: `${SITE_URL}/products` },
+      { '@type': 'ListItem', position: 3, name: typedProduct.name, item: `${SITE_URL}/products/${typedProduct.slug}` },
+    ],
+  }
+
   return (
     <div className="bg-cream min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       {/* Hero */}
       <div
         className="relative overflow-hidden"

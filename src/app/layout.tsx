@@ -16,10 +16,35 @@ const fraunces = Fraunces({
   display: 'swap',
 })
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://myraglobalexports.com'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: 'Myra Global Exports', template: '%s | Myra Global Exports' },
-  description: 'Premium agricultural export company. Connecting the World. Empowering Futures.',
-  keywords: ['agricultural exports', 'India export', 'Myra Global', 'food export'],
+  description:
+    'Myra Global Exports — premium agricultural commodities from India. We export fresh vegetables, fruits, spices, grains, and pulses to 30+ countries. APEDA-registered, FSSAI-compliant.',
+  keywords: [
+    'agricultural exports India',
+    'India agri export company',
+    'spices export India',
+    'fresh vegetables export India',
+    'grains pulses export',
+    'Myra Global Exports',
+  ],
+  openGraph: {
+    siteName: 'Myra Global Exports',
+    type: 'website',
+    locale: 'en_IN',
+    url: SITE_URL,
+    title: 'Myra Global Exports — Premium Agricultural Commodities from India',
+    description:
+      'Premium agricultural commodities from India. Fresh vegetables, fruits, spices, grains, and pulses exported to 30+ countries.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Myra Global Exports',
+    description: 'Premium agricultural commodities from India exported to 30+ countries.',
+  },
   icons: {
     apple: '/apple-touch-icon.png',
   },

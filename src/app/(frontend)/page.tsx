@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { HeroBanner } from '@/components/home/HeroBanner'
 import { AboutSection } from '@/components/home/AboutSection'
 import { WhyChooseUs } from '@/components/home/WhyChooseUs'
@@ -11,6 +12,41 @@ import { createClient } from '@/lib/supabase/server'
 import type { ProductImage } from '@/types/database'
 
 const { showProducts, showCertificates, showExportMarkets, showContactInfo } = siteSettings.sections
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://myraglobalexports.com'
+
+export const metadata: Metadata = {
+  title: 'Myra Global Exports — Premium Agricultural Commodities from India',
+  description:
+    'Myra Global Exports sources and exports premium agricultural produce — fresh vegetables, fruits, spices, grains, pulses, and oil seeds — from India to buyers in 30+ countries.',
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    url: SITE_URL,
+    title: 'Myra Global Exports — Premium Agricultural Commodities from India',
+    description:
+      'Premium agricultural produce exported from India. Fresh vegetables, fruits, spices, grains, pulses — sourced from verified Indian farms.',
+  },
+}
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Myra Global Exports',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+91-81692-13274',
+    contactType: 'sales',
+    availableLanguage: 'English',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: 'Maharashtra',
+    addressCountry: 'IN',
+  },
+  sameAs: ['https://www.instagram.com/myraglobalexports_'],
+}
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -47,6 +83,10 @@ export default async function HomePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
       <HeroBanner />
       <AboutSection />
       <WhyChooseUs />

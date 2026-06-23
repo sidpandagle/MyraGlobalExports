@@ -3,7 +3,8 @@ import { InquiryForm } from '@/components/forms/InquiryForm'
 
 export const metadata: Metadata = {
   title: 'Get a Quote',
-  description: 'Request a competitive export quote from Myra Global Exports.',
+  description:
+    'Request a competitive agricultural export quote from Myra Global Exports. Fill in our inquiry form with your product, quantity, and destination — we respond within 24 hours.',
 }
 
 export default function GetQuotePage() {

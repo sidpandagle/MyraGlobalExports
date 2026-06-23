@@ -4,7 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Certifications',
-  description: 'Myra Global Exports holds certifications ensuring international trade compliance.',
+  description:
+    'Myra Global Exports is GST-registered with IEC, APEDA, and FSSAI certifications in progress — ensuring compliant, quality-assured agricultural exports to international markets.',
 }
 
 export default async function CertificationsPage() {

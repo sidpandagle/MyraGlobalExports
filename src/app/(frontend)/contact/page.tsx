@@ -4,7 +4,8 @@ import { siteSettings } from '@/data/site-settings'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: 'Get in touch with Myra Global Exports.',
+  description:
+    'Contact Myra Global Exports for agricultural export inquiries. Reach our team via phone, WhatsApp, or the contact form. We respond to all inquiries within 24 hours.',
 }
 
 export default function ContactPage() {
