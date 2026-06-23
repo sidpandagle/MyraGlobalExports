@@ -81,7 +81,7 @@ export function ExportMarkets() {
           {[
             { value: '30+', label: 'Countries' },
             { value: '6', label: 'Continents' },
-            { value: '50+', label: 'Commodities' },
+            { value: '61+', label: 'Commodities' },
             { value: '∞', label: 'Growth Potential' },
           ].map(({ value, label }) => (
             <div key={label}>

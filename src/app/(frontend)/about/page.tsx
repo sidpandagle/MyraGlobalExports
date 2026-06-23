@@ -11,18 +11,17 @@ export const metadata: Metadata = {
 const WHY_WORK = [
   'Direct sourcing from verified Indian farms and suppliers',
   'Strict quality checks at every stage — farm to shipment',
-  'All regulatory compliances: GST, IEC, APEDA, FSSAI',
+  'GST registered; IEC, APEDA, and FSSAI certifications in progress',
   'Flexible packaging and documentation for all buyer requirements',
   'Dedicated account manager for every buyer',
   'Transparent pricing with no hidden charges',
 ]
 
 const MILESTONES = [
-  { year: '2020', event: 'Company founded in India' },
-  { year: '2021', event: 'First international export to UAE' },
-  { year: '2022', event: 'Received APEDA & FSSAI certification' },
-  { year: '2023', event: 'Expanded to 20+ export markets' },
-  { year: '2024', event: 'Reached 30+ countries, 50+ products' },
+  { year: '2025', event: 'Myra Global founded in India' },
+  { year: '2025', event: 'GST registration secured' },
+  { year: '2025', event: 'Catalogue launched with 61+ agri-commodities' },
+  { year: '2025', event: 'Initial international buyer network established' },
 ]
 
 export default function AboutPage() {

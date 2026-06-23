@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 const STATS = [
   { value: '30+', label: 'Countries Served' },
-  { value: '50+', label: 'Products' },
+  { value: '61+', label: 'Products' },
   { value: '100%', label: 'Quality Assured' },
 ]
 
