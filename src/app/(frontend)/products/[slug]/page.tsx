@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { ShareButtons } from '@/components/shared/ShareButtons'
 import type { Product, ProductSpec, ProductImage } from '@/types/database'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://myraglobalexports.com'
@@ -213,6 +214,24 @@ export default async function ProductDetailPage({
                 <p className="font-sans text-white/70 text-sm">{typedProduct.moq} {typedProduct.moq_unit}</p>
               </div>
             )}
+            {typedProduct.hs_code && (
+              <div>
+                <p className="text-[9px] font-sans uppercase tracking-[0.3em] text-white/30 mb-1">HS Code</p>
+                <p className="font-sans text-white/70 text-sm">{typedProduct.hs_code}</p>
+              </div>
+            )}
+            {typedProduct.loading_capacity && (
+              <div>
+                <p className="text-[9px] font-sans uppercase tracking-[0.3em] text-white/30 mb-1">Loading Capacity</p>
+                <p className="font-sans text-white/70 text-sm">{typedProduct.loading_capacity}</p>
+              </div>
+            )}
+            {typedProduct.supply_capacity && (
+              <div>
+                <p className="text-[9px] font-sans uppercase tracking-[0.3em] text-white/30 mb-1">Supply Capacity/Month</p>
+                <p className="font-sans text-white/70 text-sm">{typedProduct.supply_capacity}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -380,6 +399,11 @@ export default async function ProductDetailPage({
                     <span className="font-sans text-[13px] text-bark/65 leading-snug">{point}</span>
                   </div>
                 ))}
+              </div>
+
+              <div className="bg-white border border-fog p-6">
+                <p className="text-[10px] font-sans uppercase tracking-[0.3em] text-stone mb-4">Share</p>
+                <ShareButtons url={`${SITE_URL}/products/${typedProduct.slug}`} title={typedProduct.name} />
               </div>
             </div>
           </div>

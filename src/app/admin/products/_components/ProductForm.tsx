@@ -179,6 +179,9 @@ export function ProductForm({ product }: Props) {
   const [moqUnit, setMoqUnit] = useState<typeof MOQ_UNITS[number]>(
     (product?.moq_unit as typeof MOQ_UNITS[number]) ?? 'MT',
   )
+  const [hsCode, setHsCode] = useState(product?.hs_code ?? '')
+  const [loadingCapacity, setLoadingCapacity] = useState(product?.loading_capacity ?? '')
+  const [supplyCapacity, setSupplyCapacity] = useState(product?.supply_capacity ?? '')
   const [displayOrder, setDisplayOrder] = useState(product?.display_order ?? 999)
   const [isPublished, setIsPublished] = useState(product?.is_published ?? true)
   const [isFuture, setIsFuture] = useState(product?.is_future ?? false)
@@ -222,6 +225,9 @@ export function ProductForm({ product }: Props) {
       availability: availability || null,
       moq: moq || null,
       moq_unit: moqUnit || null,
+      hs_code: hsCode || null,
+      loading_capacity: loadingCapacity || null,
+      supply_capacity: supplyCapacity || null,
       display_order: displayOrder,
       is_published: isPublished,
       is_future: isFuture,
@@ -347,6 +353,20 @@ export function ProductForm({ product }: Props) {
             >
               {MOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
             </select>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="space-y-1">
+            <Label>HS Code</Label>
+            <Input value={hsCode} onChange={(e) => setHsCode(e.target.value)} placeholder="0703.10" />
+          </div>
+          <div className="space-y-1">
+            <Label>Loading Capacity</Label>
+            <Input value={loadingCapacity} onChange={(e) => setLoadingCapacity(e.target.value)} placeholder="20 FT / 40 FT" />
+          </div>
+          <div className="space-y-1">
+            <Label>Supply Capacity / Month</Label>
+            <Input value={supplyCapacity} onChange={(e) => setSupplyCapacity(e.target.value)} placeholder="500 MT" />
           </div>
         </div>
       </section>

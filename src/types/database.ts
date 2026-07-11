@@ -29,6 +29,9 @@ export interface Database {
           availability: string | null
           moq: string | null
           moq_unit: 'Kg' | 'MT' | 'Container Load' | 'Custom' | null
+          hs_code: string | null
+          loading_capacity: string | null
+          supply_capacity: string | null
           display_order: number
           is_published: boolean
           is_future: boolean
@@ -57,6 +60,9 @@ export interface Database {
           availability?: string | null
           moq?: string | null
           moq_unit?: 'Kg' | 'MT' | 'Container Load' | 'Custom' | null
+          hs_code?: string | null
+          loading_capacity?: string | null
+          supply_capacity?: string | null
           display_order?: number
           is_published?: boolean
           is_future?: boolean

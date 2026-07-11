@@ -1,4 +1,5 @@
 import { FaWhatsapp, FaInstagram, FaFacebook, FaLinkedin, FaYoutube } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 
 type SocialData = {
   whatsapp?: string | null
@@ -6,6 +7,7 @@ type SocialData = {
   facebook?: string | null
   linkedin?: string | null
   youtube?: string | null
+  twitter?: string | null
 }
 
 type Props = {
@@ -21,6 +23,7 @@ export function SocialLinks({ social, className = '', iconSize = 20 }: Props) {
     { href: social?.facebook, Icon: FaFacebook, label: 'Facebook', color: '#1877F2' },
     { href: social?.linkedin, Icon: FaLinkedin, label: 'LinkedIn', color: '#0A66C2' },
     { href: social?.youtube, Icon: FaYoutube, label: 'YouTube', color: '#FF0000' },
+    { href: social?.twitter, Icon: FaXTwitter, label: 'X', color: '#000000' },
   ].filter((l) => l.href)
 
   return (

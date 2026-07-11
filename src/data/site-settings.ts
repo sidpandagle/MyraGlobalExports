@@ -11,9 +11,10 @@ export const siteSettings = {
   social: {
     whatsapp: 'https://wa.me/918169213274',
     instagram: 'https://www.instagram.com/myraglobalexports_?igsh=NDQxaHBzZnliZWU4' as string | null,
-    facebook: null as string | null,
-    linkedin: null as string | null,
-    youtube: null as string | null,
+    facebook: 'https://www.facebook.com/profile.php?id=61578133863317' as string | null,
+    linkedin: 'https://www.linkedin.com/in/myra-global-exports-4040b641b' as string | null,
+    youtube: 'https://youtube.com/@myraglobalexports' as string | null,
+    twitter: 'https://x.com/MyraGlobalivlz' as string | null,
   },
   sections: {
     showProducts: true,

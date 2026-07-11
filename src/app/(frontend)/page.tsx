@@ -5,6 +5,8 @@ import { WhyChooseUs } from '@/components/home/WhyChooseUs'
 import { ProductsSection } from '@/components/home/ProductsSection'
 import { CertificationsSection } from '@/components/home/CertificationsSection'
 import { ExportMarkets } from '@/components/home/ExportMarkets'
+import { ExportInfo } from '@/components/home/ExportInfo'
+import { PaymentTerms } from '@/components/home/PaymentTerms'
 import { InquirySection } from '@/components/home/InquirySection'
 import { ContactInfoSection } from '@/components/home/ContactInfoSection'
 import { siteSettings } from '@/data/site-settings'
@@ -93,6 +95,8 @@ export default async function HomePage() {
       {showProducts && <ProductsSection products={products} />}
       {showCertificates && <CertificationsSection certificates={certificates} />}
       {showExportMarkets && <ExportMarkets />}
+      <ExportInfo />
+      <PaymentTerms />
       <InquirySection />
       {showContactInfo && (
         <ContactInfoSection contact={siteSettings.contact} />

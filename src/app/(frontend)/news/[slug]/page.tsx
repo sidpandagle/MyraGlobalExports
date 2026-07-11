@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 import { createClient } from '@/lib/supabase/server'
+import { ShareButtons } from '@/components/shared/ShareButtons'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://myraglobalexports.com'
 
@@ -88,9 +89,11 @@ export default async function NewsArticlePage({
         {new Date(post.published_at ?? post.created_at).toLocaleDateString('en-IN', { dateStyle: 'long' })}
       </p>
 
-      <h1 className="font-heading text-4xl font-bold text-brand-green mb-8 leading-tight">
+      <h1 className="font-heading text-4xl font-bold text-brand-green mb-6 leading-tight">
         {post.title}
       </h1>
+
+      <ShareButtons url={`${SITE_URL}/news/${post.slug}`} title={post.title} className="mb-8" />
 
       {post.body && (
         <div className="prose prose-green max-w-none">
