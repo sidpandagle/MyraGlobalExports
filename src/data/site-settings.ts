@@ -24,6 +24,7 @@ export const siteSettings = {
     showGallery: true,
     showNews: true,
     showPartners: false,
+    showSocialMedia: true,
   },
   downloads: {
     companyProfile: null as { url: string } | null,
