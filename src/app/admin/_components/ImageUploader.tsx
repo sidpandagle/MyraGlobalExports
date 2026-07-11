@@ -1,6 +1,6 @@
 'use client'
 import { useState, useRef } from 'react'
-import { createClient } from '@/lib/supabase/browser'
+import { uploadImage } from './upload-actions'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 
@@ -29,22 +29,17 @@ export function ImageUploader({ bucket, currentUrl, onUpload, className }: Props
     setError(null)
     setUploading(true)
 
-    const supabase = createClient()
-    const ext = file.name.split('.').pop()
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const formData = new FormData()
+    formData.set('file', file)
+    const result = await uploadImage(bucket, formData)
 
-    const { error: uploadError } = await supabase.storage
-      .from(bucket)
-      .upload(path, file, { upsert: true })
-
-    if (uploadError) {
-      setError(uploadError.message)
+    if (result.error || !result.url) {
+      setError(result.error ?? 'Upload failed')
       setUploading(false)
       return
     }
 
-    const { data } = supabase.storage.from(bucket).getPublicUrl(path)
-    onUpload(data.publicUrl)
+    onUpload(result.url)
     setUploading(false)
   }
 

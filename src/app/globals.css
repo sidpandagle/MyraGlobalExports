@@ -21,6 +21,28 @@
   --admin-text: #2A1C0C;
   --admin-muted: #6B5A45;
   --admin-accent: #C8882A;
+
+  /* shadcn/ui theme variables, mapped to the brand palette above */
+  --background: 40 30% 97%;
+  --foreground: 29 40% 17%;
+  --card: 40 30% 97%;
+  --card-foreground: 29 40% 17%;
+  --popover: 40 30% 97%;
+  --popover-foreground: 29 40% 17%;
+  --primary: 137 64% 14%;
+  --primary-foreground: 40 30% 97%;
+  --secondary: 38 30% 90%;
+  --secondary-foreground: 29 40% 17%;
+  --muted: 38 30% 90%;
+  --muted-foreground: 39 19% 40%;
+  --accent: 36 65% 47%;
+  --accent-foreground: 40 30% 97%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 40 30% 97%;
+  --border: 40 20% 82%;
+  --input: 40 20% 82%;
+  --ring: 137 64% 14%;
+  --radius: 0.5rem;
 }
 
 @layer base {
